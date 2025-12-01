@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROCUREDATA | Guía Kit Espacio de Datos</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Animaciones suaves */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Estilos para pestañas activas */
+        .tab-active { border-bottom: 2px solid #2563eb; color: #2563eb; font-weight: 600; }
+        .tab-inactive { color: #64748b; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 h-screen overflow-hidden flex flex-col md:flex-row">
+
+    <aside class="w-full md:w-80 bg-white border-r border-slate-200 overflow-y-auto hidden md:block flex-shrink-0">
+        <div class="p-6 border-b border-slate-100 sticky top-0 bg-white z-10">
+            <div class="flex items-center gap-2 font-bold text-xl text-blue-600">
+                <i data-lucide="book-open" class="h-6 w-6"></i>
+                <span>Guía Kit Digital</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Manual de Adhesión 2024</p>
+        </div>
+        <nav class="p-4 space-y-1" id="sidebar-nav">
+            </nav>
+        <div class="p-6 mt-4">
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-4 text-white text-center shadow-lg">
+                <p class="text-xs font-medium mb-3 opacity-90">¿Listo para solicitar tu ayuda?</p>
+                <a href="https://procuredata.app/auth" target="_blank" class="block w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-md text-sm font-medium transition-colors">
+                    Empezar Registro
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full relative">
+        
+        <div class="md:hidden p-4 bg-white border-b flex justify-between items-center">
+            <span class="font-bold text-sm text-blue-600" id="mobile-page-indicator">Página 1</span>
+            <div class="flex items-center gap-2 font-bold text-lg">
+                <i data-lucide="book-open" class="h-5 w-5 text-blue-600"></i> PROCUREDATA
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 md:p-12 scroll-smooth" id="scroll-container">
+            <div class="max-w-4xl mx-auto bg-white shadow-sm border border-slate-200 rounded-2xl p-8 md:p-12 min-h-[600px] fade-in">
+                
+                <div class="mb-8 pb-6 border-b border-slate-100">
+                    <div class="flex items-center gap-2 text-sm text-blue-600 font-mono mb-2 uppercase tracking-wider">
+                        <span class="bg-blue-50 px-2 py-0.5 rounded" id="page-badge">Página 1</span>
+                        <span id="page-total">/ 6</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900" id="page-title">Título de la Página</h1>
+                </div>
+
+                <div id="page-content" class="prose max-w-none text-slate-600 leading-relaxed">
+                    </div>
+
+            </div>
+        </div>
+
+        <div class="p-4 bg-white border-t border-slate-200 flex justify-between items-center shrink-0 z-20">
+            <button onclick="prevPage()" id="btn-prev" class="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-md text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                <i data-lucide="arrow-left" class="h-4 w-4"></i> Anterior
+            </button>
+            
+            <button onclick="nextPage()" id="btn-next" class="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md transition-all">
+                Siguiente <i data-lucide="arrow-right" class="h-4 w-4"></i>
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // --- DATOS DEL WHITEPAPER ---
+        const PAGES = [
+            {
+                id: "vision",
+                title: "1. ¿Qué es PROCUREDATA?",
+                icon: "database",
+                content: `
+                    <div class="space-y-6">
+                        <p class="text-lg">
+                            <strong>PROCUREDATA</strong> es un Espacio de Datos Soberano homologado para la industria. Conectamos a empresas que tienen datos con empresas que los necesitan, garantizando seguridad jurídica y técnica.
+                        </p>
+                        <div class="grid md:grid-cols-2 gap-4 mt-6">
+                            <div class="border-l-4 border-blue-500 bg-slate-50 p-4 rounded-r-lg">
+                                <h3 class="font-bold text-slate-900 mb-1">Para Vendedores</h3>
+                                <p class="text-sm">Convierte tus bases de datos inactivas ("Dark Data") en una nueva línea de ingresos recurrente y segura.</p>
+                            </div>
+                            <div class="border-l-4 border-green-500 bg-slate-50 p-4 rounded-r-lg">
+                                <h3 class="font-bold text-slate-900 mb-1">Para Compradores</h3>
+                                <p class="text-sm">Accede a datos de calidad verificada para entrenar IA o mejorar tu cadena de suministro sin burocracia.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: "grants",
+                title: "2. Ayudas Kit Espacio de Datos",
+                icon: "euro",
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 rounded-xl text-white shadow-lg mb-8">
+                            <h3 class="text-2xl font-bold mb-2">Financiación Europea Disponible</h3>
+                            <p class="opacity-90 mb-4">El programa "Kit Espacio de Datos" subvenciona tu integración en PROCUREDATA.</p>
+                            <div class="flex gap-4">
+                                <span class="bg-white text-blue-700 text-xs font-bold px-3 py-1 rounded-full">Convocatoria Abierta</span>
+                                <span class="bg-green-400 text-green-900 text-xs font-bold px-3 py-1 rounded-full">Fondos NextGen</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid gap-6 md:grid-cols-2">
+                            <div class="border border-slate-200 p-6 rounded-xl bg-white relative overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                <div class="absolute top-0 right-0 bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-bl-xl">OPCIÓN A</div>
+                                <h4 class="text-3xl font-extrabold text-slate-800 mb-1">15.000 €</h4>
+                                <p class="font-semibold text-green-600 mb-4">Caso de Uso: Consumidor</p>
+                                <ul class="text-sm space-y-2 text-slate-500">
+                                    <li class="flex gap-2"><i data-lucide="check-circle-2" class="h-4 w-4 text-green-500"></i> Requisito: Conectarse y descargar datos.</li>
+                                    <li class="flex gap-2"><i data-lucide="check-circle-2" class="h-4 w-4 text-green-500"></i> Ejemplo: <strong>NovaTech</strong> integrando datos.</li>
+                                    <li class="flex gap-2"><i data-lucide="check-circle-2" class="h-4 w-4 text-green-500"></i> Incluye: Licencia y consultoría.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="border-2 border-blue-100 p-6 rounded-xl bg-white relative overflow-hidden shadow-md">
+                                <div class="absolute top-0 right-0 bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-bl-xl">OPCIÓN B</div>
+                                <h4 class="text-3xl font-extrabold text-slate-800 mb-1">30.000 €</h4>
+                                <p class="font-semibold text-blue-600 mb-4">Caso de Uso: Proveedor</p>
+                                <ul class="text-sm space-y-2 text-slate-500">
+                                    <li class="flex gap-2"><i data-lucide="check-circle-2" class="h-4 w-4 text-blue-600"></i> Requisito: Publicar y monetizar datos.</li>
+                                    <li class="flex gap-2"><i data-lucide="check-circle-2" class="h-4 w-4 text-blue-600"></i> Ejemplo: <strong>Soluciones Químicas</strong> vendiendo stock.</li>
+                                    <li class="flex gap-2"><i data-lucide="check-circle-2" class="h-4 w-4 text-blue-600"></i> Incluye: Conector EDC y Smart Contracts.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: "onboarding",
+                title: "3. Requisitos y Adhesión",
+                icon: "shield-check",
+                content: `
+                    <div class="space-y-6">
+                        <p>Para acceder a las ayudas, debes adherirte a un centro homologado. PROCUREDATA cumple con los requisitos de la SEDIA y Gaia-X.</p>
+                        
+                        <div class="space-y-4 mt-6">
+                            <div class="flex gap-4 p-4 border border-slate-200 rounded-lg bg-slate-50 items-start">
+                                <div class="bg-white border border-slate-200 w-10 h-10 rounded-full flex items-center justify-center font-bold text-blue-600 shrink-0 shadow-sm">1</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900">Identidad KYB (Know Your Business)</h4>
+                                    <p class="text-sm text-slate-500 mt-1">Verificamos las escrituras de tu empresa. En la demo, verás el badge azul de verificado en <strong>Soluciones Químicas S.L.</strong></p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 p-4 border border-slate-200 rounded-lg bg-slate-50 items-start">
+                                <div class="bg-white border border-slate-200 w-10 h-10 rounded-full flex items-center justify-center font-bold text-blue-600 shrink-0 shadow-sm">2</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900">Despliegue del Conector</h4>
+                                    <p class="text-sm text-slate-500 mt-1">Te proporcionamos un nodo EDC (Eclipse Dataspace Connector) gestionado. No necesitas infraestructura propia compleja ni servidores dedicados.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: "catalog",
+                title: "4. El Catálogo (Venta)",
+                icon: "activity",
+                content: `
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-slate-900">Cómo monetizar datos: Caso Soluciones Químicas</h3>
+                        <p class="text-slate-600">
+                            La empresa tiene un ERP con el stock de reactivos en tiempo real. Suben este activo al catálogo definiendo un precio de suscripción.
+                        </p>
+                        
+                        <div class="flex flex-col md:flex-row gap-8 items-center mt-8 p-6 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                            <div class="space-y-4 text-sm flex-1">
+                                <div class="flex items-center gap-3">
+                                    <span class="px-2 py-1 border rounded bg-white text-xs font-bold">Paso 1</span>
+                                    <span>Conexión vía API al ERP (SAP/Navision).</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="px-2 py-1 border rounded bg-white text-xs font-bold">Paso 2</span>
+                                    <span>Definición de Política ODRL ("Solo uso interno").</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="px-2 py-1 border rounded bg-white text-xs font-bold">Paso 3</span>
+                                    <span>Publicación en Marketplace.</span>
+                                </div>
+                            </div>
+                            
+                            <div class="w-full max-w-xs bg-white p-4 rounded-xl shadow-lg border border-slate-200 transform md:rotate-3 transition-transform hover:rotate-0">
+                                <div class="flex justify-between mb-2">
+                                    <span class="bg-orange-100 text-orange-700 text-[10px] px-2 py-0.5 rounded font-bold">QUÍMICA</span>
+                                    <span class="font-bold text-green-600 text-sm">2.500 €/año</span>
+                                </div>
+                                <h4 class="font-bold text-slate-800 mb-1">Inventario Reactivos Q3</h4>
+                                <p class="text-xs text-slate-400 mb-4">Soluciones Químicas S.L.</p>
+                                <div class="flex gap-2 mb-3">
+                                    <i data-lucide="shield-check" class="h-4 w-4 text-blue-500"></i>
+                                    <i data-lucide="lock" class="h-4 w-4 text-orange-500"></i>
+                                </div>
+                                <div class="h-8 bg-slate-900 rounded text-white text-xs flex items-center justify-center font-medium">Ver en Catálogo</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: "purchase",
+                title: "5. Proceso de Compra",
+                icon: "zap",
+                content: `
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-slate-900">Cómo adquirir datos: Caso NovaTech</h3>
+                        <p>NovaTech necesita datos de stock para planificar su producción.</p>
+                        
+                        <div class="mt-6">
+                            <div class="flex border-b border-slate-200 mb-4 overflow-x-auto">
+                                <button onclick="switchTab('search')" class="tab-btn px-4 py-2 text-sm font-medium transition-colors tab-active" data-target="search">1. Búsqueda</button>
+                                <button onclick="switchTab('verify')" class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors" data-target="verify">2. Verificación</button>
+                                <button onclick="switchTab('pay')" class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors" data-target="pay">3. Pago</button>
+                                <button onclick="switchTab('use')" class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors" data-target="use">4. Uso</button>
+                            </div>
+
+                            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200 min-h-[150px]">
+                                <div id="tab-search" class="tab-content active space-y-3">
+                                    <h4 class="font-bold text-slate-900">Exploración Inteligente</h4>
+                                    <p class="text-sm">NovaTech usa el buscador o el AI Concierge para encontrar "Datos de viento en Galicia".</p>
+                                    <div class="p-3 bg-white border rounded text-xs font-mono">
+                                        <span class="text-slate-400">User:</span> "Busco datos eólicos"<br>
+                                        <span class="text-blue-600">AI:</span> "He encontrado 3 datasets de alta calidad..."
+                                    </div>
+                                </div>
+                                <div id="tab-verify" class="tab-content space-y-3">
+                                    <h4 class="font-bold text-slate-900">Data Sandbox</h4>
+                                    <p class="text-sm">Antes de pagar, NovaTech visualiza una muestra anonimizada de 10 filas para asegurar que el formato JSON es compatible con sus sistemas.</p>
+                                </div>
+                                <div id="tab-pay" class="tab-content space-y-3">
+                                    <h4 class="font-bold text-slate-900">Wallet y Facturación</h4>
+                                    <p class="text-sm">NovaTech usa su saldo precargado. La factura se genera automáticamente y el pago queda en custodia (Escrow) hasta la entrega técnica.</p>
+                                </div>
+                                <div id="tab-use" class="tab-content space-y-3">
+                                    <h4 class="font-bold text-slate-900">Integración API</h4>
+                                    <p class="text-sm">Una vez aprobado, NovaTech recibe un Token de Acceso y snippets de código (Python/Node) para conectar su pipeline de IA.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: "tech",
+                title: "6. Arquitectura Técnica",
+                icon: "server",
+                content: `
+                    <div class="space-y-6">
+                        <p>La magia ocurre bajo el capó. PROCUREDATA abstrae la complejidad de <strong>Gaia-X</strong> para que tú solo veas negocio.</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-slate-50 rounded-lg border hover:bg-white transition-colors">
+                                <h5 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4 text-slate-700"></i> IDS Connector</h5>
+                                <p class="text-xs text-slate-500">Protocolo estándar europeo para intercambio soberano.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg border hover:bg-white transition-colors">
+                                <h5 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 text-slate-700"></i> ODRL Policies</h5>
+                                <p class="text-xs text-slate-500">Lenguaje de expresión de derechos digitales.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg border hover:bg-white transition-colors">
+                                <h5 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-slate-700"></i> SSI Identity</h5>
+                                <p class="text-xs text-slate-500">Identidad Auto-soberana (DID) para empresas.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg border hover:bg-white transition-colors">
+                                <h5 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="bot" class="w-4 h-4 text-slate-700"></i> AI Audit</h5>
+                                <p class="text-xs text-slate-500">Validación automática de calidad de datos.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        // --- ESTADO Y LÓGICA ---
+        let currentPageIndex = 0;
+
+        function renderSidebar() {
+            const nav = document.getElementById('sidebar-nav');
+            nav.innerHTML = PAGES.map((page, idx) => `
+                <button 
+                    onclick="setPage(${idx})"
+                    class="w-full text-left px-4 py-3 rounded-lg text-sm transition-all flex items-center gap-3 ${
+                        idx === currentPageIndex 
+                        ? 'bg-blue-50 text-blue-700 font-medium border border-blue-100' 
+                        : 'text-slate-600 hover:bg-slate-50'
+                    }"
+                >
+                    <i data-lucide="${page.icon}" class="h-4 w-4"></i>
+                    <span class="truncate">${page.title}</span>
+                </button>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderPage() {
+            const page = PAGES[currentPageIndex];
+            
+            // Animación de entrada
+            const container = document.getElementById('page-content');
+            container.parentElement.classList.remove('fade-in');
+            void container.parentElement.offsetWidth; // trigger reflow
+            container.parentElement.classList.add('fade-in');
+
+            // Actualizar contenido
+            document.getElementById('page-badge').textContent = `Página ${currentPageIndex + 1}`;
+            document.getElementById('page-total').textContent = `/ ${PAGES.length}`;
+            document.getElementById('page-title').textContent = page.title;
+            document.getElementById('page-content').innerHTML = page.content;
+            
+            // Móvil
+            document.getElementById('mobile-page-indicator').textContent = `Página ${currentPageIndex + 1} de ${PAGES.length}`;
+
+            // Botones
+            document.getElementById('btn-prev').disabled = currentPageIndex === 0;
+            document.getElementById('btn-next').disabled = currentPageIndex === PAGES.length - 1;
+
+            // Scroll top
+            document.getElementById('scroll-container').scrollTop = 0;
+
+            renderSidebar(); // Para actualizar el estado activo
+            lucide.createIcons(); // Renderizar iconos nuevos
+        }
+
+        function setPage(index) {
+            currentPageIndex = index;
+            renderPage();
+        }
+
+        function nextPage() {
+            if (currentPageIndex < PAGES.length - 1) {
+                currentPageIndex++;
+                renderPage();
+            }
+        }
+
+        function prevPage() {
+            if (currentPageIndex > 0) {
+                currentPageIndex--;
+                renderPage();
+            }
+        }
+
+        // Lógica de Tabs (Pestañas)
+        window.switchTab = function(targetId) {
+            // Quitar clase activa de todos los botones
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-slate-500');
+                if(btn.dataset.target === targetId) {
+                    btn.classList.add('tab-active');
+                    btn.classList.remove('text-slate-500');
+                }
+            });
+
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Mostrar el target
+            document.getElementById('tab-' + targetId).classList.add('active');
+        }
+
+        // INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPage();
+        });
+
+    </script>
+</body>
+</html>
